@@ -4,13 +4,15 @@ import { StyleSheet, Pressable, View } from 'react-native';
 import Bin from '../image/trash-svgrepo-com';
 import Edit from '../image/pen-field-svgrepo-com';
 
-function ListHiddenItem({ data, onDelete }) {
+function ListHiddenItem({ data, onDelete, onEdit, rowMap }) {
   const handleDelete = () => {
     onDelete(data.item.key);
+    rowMap[data.item.key].closeRow();
   };
 
   const handleEdit = () => {
-    console.log('edit');
+    onEdit(data.item);
+    rowMap[data.item.key].closeRow();
   };
 
   return (

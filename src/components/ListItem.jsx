@@ -1,13 +1,29 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
+import useDebounce from '../hooks/useDebounce';
 
-function ListItem({ title }) {
+import updateTodo from '../apis/updateTodo';
+
+function ListItem(props) {
+  const { item, onChecked, rowMap } = props;
+  const { title, key } = item;
   const [isChecked, setIsChecked] = useState(false);
 
   const handlePress = (isChecked) => {
     setIsChecked(isChecked);
+    onChecked(key, isChecked);
+    rowMap[key].closeRow();
   };
+
+  const debouncedIsChecked = useDebounce(isChecked, 1000);
+
+  useEffect(() => {
+    updateTodo({
+      ...item,
+      isChecked: debouncedIsChecked,
+    });
+  }, [debouncedIsChecked]);
 
   return (
     <BouncyCheckbox

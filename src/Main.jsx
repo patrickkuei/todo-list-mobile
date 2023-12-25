@@ -10,7 +10,9 @@ function Main() {
       <View style={styles.innterContainer}>
         <View>
           <Text style={styles.day}>TODAY</Text>
-          <Text style={styles.date}>2023/11/29</Text>
+          <Text style={styles.date}>
+            {new Date().toISOString().split('T')[0].replaceAll('-', '/')}
+          </Text>
         </View>
         <List />
       </View>

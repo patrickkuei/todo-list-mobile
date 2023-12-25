@@ -1,19 +1,22 @@
-import React, { useState } from 'react';
-import { StyleSheet, Pressable, Text, TextInput, View } from 'react-native';
+import React, { useRef, useState } from 'react';
+import { StyleSheet, Pressable, Text, TextInput, View, ActivityIndicator } from 'react-native';
 import { SwipeListView } from 'react-native-swipe-list-view';
 
 import Item from './ListItem';
 import ListHiddenItem from './ListHiddenItem';
 
+import useFetch from '../hooks/useFetch';
+import addTodo from '../apis/addTodo';
+import deleteTodo from '../apis/deleteTodo';
+import updateTodo from '../apis/updateTodo';
 import { randomId } from '../utils/math';
 
-function List() {
-  const [todos, setTodos] = useState([]);
-  const [isAddingMode, setisAddingMode] = useState(false);
+const useAddInput = (setTodos) => {
   const [inputValue, setInputValue] = useState('');
+  const [isAddingMode, setIsAddingMode] = useState(false);
 
   const handleAddPress = () => {
-    setisAddingMode(true);
+    setIsAddingMode(true);
   };
 
   const handleInputChange = (newValue) => {
@@ -21,23 +24,139 @@ function List() {
   };
 
   const handleInputBlur = () => {
-    setisAddingMode(false);
+    setIsAddingMode(false);
 
-    if (inputValue.length > 0) {
+    const key = randomId();
+    const newTitle = inputValue.trim();
+
+    if (newTitle.length > 0) {
       setTodos((prev) => [
         {
-          key: randomId(),
-          title: inputValue,
+          key,
+          title: newTitle,
         },
         ...prev,
       ]);
+
+      addTodo(newTitle, key);
     }
 
     setInputValue('');
   };
 
+  return {
+    inputValue,
+    handleInputChange,
+    handleInputBlur,
+    isAddingMode,
+    handleAddPress,
+  };
+};
+
+const useEditInput = (todos, setTodos) => {
+  const [inputValue, setInputValue] = useState('');
+  const [isEditMode, setIsEditMode] = useState(false);
+  const targetKey = useRef(null);
+
+  const handleEdit = ({ key, title }) => {
+    setIsEditMode(true);
+    targetKey.current = key;
+    setInputValue(title);
+  };
+
+  const handleInputChange = (newValue) => {
+    setInputValue(newValue);
+  };
+
+  const handleInputBlur = () => {
+    setIsEditMode(false);
+
+    const newTitle = inputValue.trim();
+
+    if (newTitle.length > 0) {
+      setTodos((prev) => {
+        const prevTodo = prev.find((todo) => todo.key === targetKey.current);
+
+        return [
+          {
+            ...prevTodo,
+            title: newTitle,
+          },
+          ...prev.filter((todo) => todo.key !== targetKey.current),
+        ];
+      });
+
+      const oldTodo = todos.find((todo) => todo.key === targetKey.current);
+
+      updateTodo({
+        ...oldTodo,
+        title: newTitle,
+      });
+    }
+
+    setInputValue('');
+  };
+
+  return {
+    inputValue,
+    handleInputChange,
+    handleInputBlur,
+    isEditMode,
+    handleEdit,
+  };
+};
+
+function List() {
+  const {
+    data: todos,
+    upateData: setTodos,
+    isLoading,
+  } = useFetch(
+    'https://script.google.com/macros/s/AKfycbzW71WRMDG0hf1nB-vzoyCz7-kKdPZH-43zLTcZLVGg8kvZwfyj-YFQK4jRWUrq_--ZZg/exec',
+    []
+  );
+
+  const {
+    inputValue: addInputValue,
+    handleInputChange: handleAddInputChange,
+    handleInputBlur: handleAddInputBlur,
+    isAddingMode,
+    handleAddPress,
+  } = useAddInput(setTodos);
+
+  const {
+    inputValue: editInputValue,
+    handleInputChange: handleEditInputChange,
+    handleInputBlur: handleEditInputBlur,
+    isEditMode,
+    handleEdit,
+  } = useEditInput(todos, setTodos);
+
+  const handleChecked = (key, isChecked) => {
+    setTodos((prev) => {
+      const prevTodo = prev.find((todo) => todo.key === key);
+
+      return isChecked
+        ? [
+            ...prev.filter((todo) => todo.key !== key),
+            {
+              ...prevTodo,
+              isChecked,
+            },
+          ]
+        : [
+            {
+              ...prevTodo,
+              isChecked,
+            },
+            ...prev.filter((todo) => todo.key !== key),
+          ];
+    });
+  };
+
   const handleDelete = (key) => {
     setTodos((prev) => prev.filter((todo) => todo.key !== key));
+    deleteTodo(key);
   };
 
   const handleGestureEnded = (rowKey, data) => {
@@ -47,47 +166,71 @@ function List() {
   };
 
   return (
-    <View style={styles.container}>
-      {isAddingMode && (
-        <TextInput
-          style={styles.input}
-          onChangeText={handleInputChange}
-          value={inputValue}
-          autoFocus={isAddingMode}
-          onBlur={handleInputBlur}
-          returnKeyType="done"
-        />
-      )}
-      {todos.length ? (
-        <SwipeListView
-          swipeRowStyle={styles.list}
-          data={todos}
-          renderItem={(data, rowMap) => <Item title={data.item.title} />}
-          renderHiddenItem={(data, rowMap) => (
-            <ListHiddenItem data={data} onDelete={handleDelete} />
-          )}
-          rightOpenValue={-150}
-          disableRightSwipe
-          rightActivationValue={-300}
-          rightActionValue={-375}
-          swipeGestureEnded={handleGestureEnded}
-        />
+    <View style={[styles.container, isLoading && styles.center]}>
+      {isLoading ? (
+        <ActivityIndicator size="large" />
       ) : (
-        <View style={styles.noTodo}>
-          <Text>No To Do Items</Text>
-        </View>
+        <>
+          {isAddingMode && !isEditMode && (
+            <TextInput
+              style={styles.input}
+              onChangeText={handleAddInputChange}
+              value={addInputValue}
+              autoFocus={isAddingMode}
+              onBlur={handleAddInputBlur}
+              returnKeyType="done"
+            />
+          )}
+          {isEditMode && !isAddingMode && (
+            <TextInput
+              style={styles.input}
+              onChangeText={handleEditInputChange}
+              value={editInputValue}
+              autoFocus={isEditMode}
+              onBlur={handleEditInputBlur}
+              returnKeyType="done"
+            />
+          )}
+          {todos.length ? (
+            <SwipeListView
+              swipeRowStyle={styles.list}
+              data={todos}
+              renderItem={(data, rowMap) => (
+                <Item item={data.item} rowMap={rowMap} onChecked={handleChecked} />
+              )}
+              renderHiddenItem={(data, rowMap) => (
+                <ListHiddenItem
+                  data={data}
+                  onDelete={handleDelete}
+                  onEdit={handleEdit}
+                  rowMap={rowMap}
+                />
+              )}
+              rightOpenValue={-150}
+              disableRightSwipe
+              disableLeftSwipe={isEditMode || isAddingMode}
+              rightActivationValue={-300}
+              rightActionValue={-375}
+              swipeGestureEnded={handleGestureEnded}
+            />
+          ) : (
+            <View style={styles.noTodo}>
+              <Text>No To Do Items</Text>
+            </View>
+          )}
+          <Pressable
+            style={({ pressed }) => [
+              styles.button,
+              styles.shadowProp,
+              pressed && styles.buttonPressed,
+              pressed && styles.shadowPropPressed,
+            ]}
+            onPress={handleAddPress}
+          >
+            <Text style={styles.buttonText}>+</Text>
+          </Pressable>
+        </>
       )}
-      <Pressable
-        style={({ pressed }) => [
-          styles.button,
-          styles.shadowProp,
-          pressed && styles.buttonPressed,
-          pressed && styles.shadowPropPressed,
-        ]}
-        onPress={handleAddPress}
-      >
-        <Text style={styles.buttonText}>+</Text>
-      </Pressable>
     </View>
   );
 }
@@ -96,6 +239,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     position: 'relative',
+  },
+  center: {
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   input: {
     height: 67,
