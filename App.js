@@ -1,15 +1,12 @@
 import React from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, SafeAreaView } from 'react-native';
-import { PortalProvider } from '@gorhom/portal';
 import Main from './src/Main.jsx';
 
 export default function App() {
   return (
     <SafeAreaView style={styles.container}>
-      <PortalProvider>
-        <Main />
-      </PortalProvider>
+      <Main />
       <StatusBar style="auto" />
     </SafeAreaView>
   );

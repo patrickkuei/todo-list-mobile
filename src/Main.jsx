@@ -2,21 +2,24 @@ import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import Topbar from './components/Topbar';
 import List from './components/List';
+import OutsidePressProvider from './context/OutsidePressContext';
 
 function Main() {
   return (
-    <View style={styles.outterContainer}>
-      <Topbar />
-      <View style={styles.innterContainer}>
-        <View>
-          <Text style={styles.day}>TODAY</Text>
-          <Text style={styles.date}>
-            {new Date().toISOString().split('T')[0].replaceAll('-', '/')}
-          </Text>
+    <OutsidePressProvider>
+      <View style={styles.outterContainer}>
+        <Topbar />
+        <View style={styles.innterContainer}>
+          <View>
+            <Text style={styles.day}>TODAY</Text>
+            <Text style={styles.date}>
+              {new Date().toISOString().split('T')[0].replaceAll('-', '/')}
+            </Text>
+          </View>
+          <List />
         </View>
-        <List />
       </View>
-    </View>
+    </OutsidePressProvider>
   );
 }
 

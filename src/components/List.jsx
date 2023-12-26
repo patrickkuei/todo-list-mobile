@@ -10,6 +10,7 @@ import addTodo from '../apis/addTodo';
 import deleteTodo from '../apis/deleteTodo';
 import updateTodo from '../apis/updateTodo';
 import { randomId } from '../utils/math';
+import OutsidePressView from './OutsidePressView';
 
 const useAddInput = (setTodos) => {
   const [inputValue, setInputValue] = useState('');
@@ -172,24 +173,28 @@ function List() {
       ) : (
         <>
           {isAddingMode && !isEditMode && (
-            <TextInput
-              style={styles.input}
-              onChangeText={handleAddInputChange}
-              value={addInputValue}
-              autoFocus={isAddingMode}
-              onBlur={handleAddInputBlur}
-              returnKeyType="done"
-            />
+            <OutsidePressView onPressOutside={handleAddInputBlur}>
+              <TextInput
+                style={styles.input}
+                onChangeText={handleAddInputChange}
+                value={addInputValue}
+                autoFocus={isAddingMode}
+                onBlur={handleAddInputBlur}
+                returnKeyType="done"
+              />
+            </OutsidePressView>
           )}
           {isEditMode && !isAddingMode && (
-            <TextInput
-              style={styles.input}
-              onChangeText={handleEditInputChange}
-              value={editInputValue}
-              autoFocus={isEditMode}
-              onBlur={handleEditInputBlur}
-              returnKeyType="done"
-            />
+            <OutsidePressView onPressOutside={handleEditInputBlur}>
+              <TextInput
+                style={styles.input}
+                onChangeText={handleEditInputChange}
+                value={editInputValue}
+                autoFocus={isEditMode}
+                onBlur={handleEditInputBlur}
+                returnKeyType="done"
+              />
+            </OutsidePressView>
           )}
           {todos.length ? (
             <SwipeListView
