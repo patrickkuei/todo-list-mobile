@@ -1,29 +1,31 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
-import useDebounce from '../hooks/useDebounce';
 
 import updateTodo from '../apis/updateTodo';
+import debounce from '../utils/debounce';
 
-function ListItem(props) {
+const ListItem = React.memo((props) => {
   const { item, onChecked, rowMap } = props;
-  const { title, key } = item;
-  const [isChecked, setIsChecked] = useState(false);
+  const { title, key, isChecked: remoteIsChecked } = item;
+  const [isChecked, setIsChecked] = useState(remoteIsChecked);
+
+  const debouncedAPICall = debounce(
+    () =>
+      updateTodo({
+        ...item,
+        isChecked,
+      }),
+    1000
+  );
 
   const handlePress = (isChecked) => {
     setIsChecked(isChecked);
     onChecked(key, isChecked);
+    debouncedAPICall(isChecked);
+
     rowMap[key].closeRow();
   };
-
-  const debouncedIsChecked = useDebounce(isChecked, 1000);
-
-  useEffect(() => {
-    updateTodo({
-      ...item,
-      isChecked: debouncedIsChecked,
-    });
-  }, [debouncedIsChecked]);
 
   return (
     <BouncyCheckbox
@@ -33,9 +35,10 @@ function ListItem(props) {
       onPress={handlePress}
       fillColor="#8390FF"
       unfillColor="white"
+      isChecked={isChecked}
     />
   );
-}
+});
 
 const styles = StyleSheet.create({
   item: {

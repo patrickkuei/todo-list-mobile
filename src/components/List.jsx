@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { StyleSheet, Pressable, Text, TextInput, View, ActivityIndicator } from 'react-native';
 import { SwipeListView } from 'react-native-swipe-list-view';
 
@@ -35,6 +35,7 @@ const useAddInput = (setTodos) => {
         {
           key,
           title: newTitle,
+          last_update_date: new Date().toISOString(),
         },
         ...prev,
       ]);
@@ -82,6 +83,7 @@ const useEditInput = (todos, setTodos) => {
           {
             ...prevTodo,
             title: newTitle,
+            last_update_date: new Date().toISOString(),
           },
           ...prev.filter((todo) => todo.key !== targetKey.current),
         ];
@@ -107,7 +109,7 @@ const useEditInput = (todos, setTodos) => {
   };
 };
 
-function List() {
+function List({ selectedDate }) {
   const {
     data: todos,
     upateData: setTodos,
@@ -115,6 +117,15 @@ function List() {
   } = useFetch(
     'https://script.google.com/macros/s/AKfycbzW71WRMDG0hf1nB-vzoyCz7-kKdPZH-43zLTcZLVGg8kvZwfyj-YFQK4jRWUrq_--ZZg/exec',
     []
+  );
+  const filterTodos = useMemo(
+    () =>
+      todos.filter(
+        (todo) =>
+          new Date(todo.last_update_date).toISOString().split('T')[0] ===
+          selectedDate.toISOString().split('T')[0]
+      ),
+    [todos, isLoading, selectedDate]
   );
 
   const {
@@ -131,29 +142,17 @@ function List() {
     handleInputBlur: handleEditInputBlur,
     isEditMode,
     handleEdit,
-  } = useEditInput(todos, setTodos);
+  } = useEditInput(filterTodos, setTodos);
 
-  const handleChecked = (key, isChecked) => {
-    setTodos((prev) => {
-      const prevTodo = prev.find((todo) => todo.key === key);
+  const handleChecked = useCallback((key, isChecked) => {
+    setTodos((prev) =>
+      prev.map((todo) => {
+        if (todo.key === key) return { ...todo, isChecked };
 
-      return isChecked
-        ? [
-            ...prev.filter((todo) => todo.key !== key),
-            {
-              ...prevTodo,
-              isChecked,
-            },
-          ]
-        : [
-            {
-              ...prevTodo,
-              isChecked,
-            },
-            ...prev.filter((todo) => todo.key !== key),
-          ];
-    });
-  };
+        return todo;
+      })
+    );
+  }, []);
 
   const handleDelete = (key) => {
     setTodos((prev) => prev.filter((todo) => todo.key !== key));
@@ -196,10 +195,10 @@ function List() {
               />
             </OutsidePressView>
           )}
-          {todos.length ? (
+          {filterTodos.length ? (
             <SwipeListView
               swipeRowStyle={styles.list}
-              data={todos}
+              data={filterTodos}
               renderItem={(data, rowMap) => (
                 <Item item={data.item} rowMap={rowMap} onChecked={handleChecked} />
               )}
