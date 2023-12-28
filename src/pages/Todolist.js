@@ -10,7 +10,7 @@ function Todolist() {
   const TODAY = new Date().getDay();
 
   const getSundayTime = () => {
-    return new Date().getTime() - ONE_DAY_TIME * TODAY;
+    return new Date().getTime() - ONE_DAY_TIME * (TODAY - 1);
   };
 
   const getDateArray = () => {
@@ -26,9 +26,7 @@ function Todolist() {
   const [selectedDate, setSelectedDate] = useState(new Date());
 
   const onIndexChanged = (index) => {
-    console.log('onIndexChanged', dateList[index]);
     setSelectedDate(dateList[index]);
-    console.log(selectedDate);
   };
 
   return (

@@ -4,12 +4,10 @@ import Swiper from 'react-native-swiper';
 
 function DateView({ dateList, onIndexChanged, today }) {
   const getDayTitle = (i) => {
-    const today = new Date().getDay();
-
     switch (true) {
-      case i < today:
+      case i < today - 1:
         return 'PAST';
-      case i > today:
+      case i > today - 1:
         return 'FUTURE';
       default:
         return 'TODAY';
@@ -23,7 +21,7 @@ function DateView({ dateList, onIndexChanged, today }) {
       showsPagination={false}
       loop={false}
       loadMinimal={true}
-      index={today}
+      index={today - 1}
       onIndexChanged={onIndexChanged}
     >
       {dateList.map((d, i) => (
