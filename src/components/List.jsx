@@ -4,13 +4,14 @@ import { SwipeListView } from 'react-native-swipe-list-view';
 
 import Item from './ListItem';
 import ListHiddenItem from './ListHiddenItem';
+import OutsidePressView from './OutsidePressView';
+import AddIcon from '../image/pen-circle-svgrepo-com';
 
 import useFetch from '../hooks/useFetch';
 import addTodo from '../apis/addTodo';
 import deleteTodo from '../apis/deleteTodo';
 import updateTodo from '../apis/updateTodo';
 import { randomId } from '../utils/math';
-import OutsidePressView from './OutsidePressView';
 
 const useAddInput = (setTodos) => {
   const [inputValue, setInputValue] = useState('');
@@ -231,7 +232,7 @@ function List({ selectedDate }) {
             ]}
             onPress={handleAddPress}
           >
-            <Text style={styles.buttonText}>+</Text>
+            <AddIcon width={80} height={80} color="#FFF" />
           </Pressable>
         </>
       )}
