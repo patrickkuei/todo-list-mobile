@@ -11,7 +11,7 @@ const ListItem = React.memo((props) => {
   const [isChecked, setIsChecked] = useState(remoteIsChecked);
 
   const debouncedAPICall = debounce(
-    () =>
+    (isChecked) =>
       updateTodo({
         ...item,
         isChecked,
