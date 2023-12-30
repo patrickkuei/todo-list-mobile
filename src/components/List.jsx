@@ -13,7 +13,7 @@ import deleteTodo from '../apis/deleteTodo';
 import updateTodo from '../apis/updateTodo';
 import { randomId } from '../utils/math';
 
-const useAddInput = (setTodos) => {
+const useAddInput = (setTodos, selectedDate) => {
   const [inputValue, setInputValue] = useState('');
   const [isAddingMode, setIsAddingMode] = useState(false);
 
@@ -36,12 +36,12 @@ const useAddInput = (setTodos) => {
         {
           key,
           title: newTitle,
-          last_update_date: new Date().toISOString(),
+          last_update_date: selectedDate.toISOString(),
         },
         ...prev,
       ]);
 
-      addTodo(newTitle, key);
+      addTodo(newTitle, key, selectedDate.toISOString());
     }
 
     setInputValue('');
@@ -135,7 +135,7 @@ function List({ selectedDate }) {
     handleInputBlur: handleAddInputBlur,
     isAddingMode,
     handleAddPress,
-  } = useAddInput(setTodos);
+  } = useAddInput(setTodos, selectedDate);
 
   const {
     inputValue: editInputValue,
