@@ -1,6 +1,7 @@
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { StyleSheet, Pressable, Text, TextInput, View, ActivityIndicator } from 'react-native';
 import { SwipeListView } from 'react-native-swipe-list-view';
+import * as Haptics from 'expo-haptics';
 
 import Item from './ListItem';
 import ListHiddenItem from './ListHiddenItem';
@@ -19,6 +20,8 @@ const useAddInput = (setTodos, selectedDate) => {
 
   const handleAddPress = () => {
     setIsAddingMode(true);
+
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
   };
 
   const handleInputChange = (newValue) => {
@@ -99,6 +102,7 @@ const useEditInput = (todos, setTodos) => {
     }
 
     setInputValue('');
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
   };
 
   return {
@@ -153,11 +157,15 @@ function List({ selectedDate }) {
         return todo;
       })
     );
+
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
   }, []);
 
   const handleDelete = (key) => {
     setTodos((prev) => prev.filter((todo) => todo.key !== key));
     deleteTodo(key);
+
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
   };
 
   const handleGestureEnded = (rowKey, data) => {

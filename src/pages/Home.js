@@ -1,7 +1,13 @@
 import React from 'react';
+import * as Haptics from 'expo-haptics';
 import { StyleSheet, View, Text, Pressable } from 'react-native';
 
 function Home({ navigation }) {
+  const handleNavigate = (destination) => {
+    navigation.navigate(destination);
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+  };
+
   return (
     <View style={styles.container}>
       <Pressable
@@ -11,7 +17,7 @@ function Home({ navigation }) {
           pressed && styles.buttonPressed,
           pressed && styles.shadowPropPressed,
         ]}
-        onPress={() => navigation.navigate('Todolist')}
+        onPress={() => handleNavigate('Todolist')}
       >
         {({ pressed }) => (
           <Text style={[pressed ? styles.buttonTextPressed : styles.buttonText]}>Todo List</Text>
@@ -24,7 +30,7 @@ function Home({ navigation }) {
           pressed && styles.buttonPressed,
           pressed && styles.shadowPropPressed,
         ]}
-        onPress={() => navigation.navigate('Calendar')}
+        onPress={() => handleNavigate('Calendar')}
       >
         {({ pressed }) => (
           <Text style={[pressed ? styles.buttonTextPressed : styles.buttonText]}>Calendar</Text>
