@@ -2,40 +2,13 @@ import React, { useMemo, useState } from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
 import CalendarDay from './CalendarDay';
 
-const DAYS_ARRAY = ['s', 'm', 't', 'w', 't', 'f', 's'];
+import { DAYS_ARRAY, getMonthDayArray } from '../utils/date';
 
 const SimpleCalendar = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth() + 1;
-
-  const getDaysInMonth = (year, month) => {
-    return new Date(year, month, 0).getDate();
-  };
-
-  const daysArray = useMemo(() => {
-    const totalDaysInMonth = getDaysInMonth(year, month);
-    const firstDate = new Date(year, month - 1, 1).getDay();
-
-    const daysArray = new Array(43);
-
-    for (let i = 0; i < firstDate; i++) {
-      daysArray[i] = {
-        day: new Date(year, month - 1, 0).getDate() - firstDate + i + 1,
-        month: month - 1,
-      };
-    }
-
-    for (let i = 0; i < totalDaysInMonth; i++) {
-      daysArray[firstDate + i] = { day: i + 1, month };
-    }
-
-    for (let i = 0; i < 42 - totalDaysInMonth - firstDate; i++) {
-      daysArray[totalDaysInMonth + firstDate + i + 1] = { day: i + 1, month: month + 1 };
-    }
-
-    return daysArray;
-  }, []);
+  const monthDayArray = getMonthDayArray(year, month);
 
   const getTitle = () => {
     const currentDate = new Date();
@@ -58,7 +31,7 @@ const SimpleCalendar = () => {
         <Text style={styles.date}>{getTitle()}</Text>
       </View>
       <View style={styles.calendarContainer}>
-        {daysArray.map(({ day, month }, i) => (
+        {monthDayArray.map(({ day, month }, i) => (
           <CalendarDay key={i} day={day} month={month} index={i} />
         ))}
       </View>

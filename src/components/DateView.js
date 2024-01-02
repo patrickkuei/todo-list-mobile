@@ -2,18 +2,9 @@ import React, { useRef, useState } from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import Swiper from 'react-native-swiper';
 
-function DateView({ dateList, onIndexChanged, today }) {
-  const getDayTitle = (i) => {
-    switch (true) {
-      case i < today - 1:
-        return 'PAST';
-      case i > today - 1:
-        return 'FUTURE';
-      default:
-        return 'TODAY';
-    }
-  };
+import { DayNames } from '../utils/date';
 
+function DateView({ dateList, onIndexChanged, today }) {
   return (
     <Swiper
       containerStyle={styles.swiperContainer}
@@ -21,12 +12,12 @@ function DateView({ dateList, onIndexChanged, today }) {
       showsPagination={false}
       loop={false}
       loadMinimal={true}
-      index={today - 1}
+      index={today}
       onIndexChanged={onIndexChanged}
     >
       {dateList.map((d, i) => (
         <View key={d} style={styles.dataSelector}>
-          <Text style={styles.day}>{getDayTitle(i)}</Text>
+          <Text style={styles.day}>{DayNames[i]}</Text>
           <Text style={styles.date}>{d.toISOString().split('T')[0].replaceAll('-', '/')}</Text>
         </View>
       ))}

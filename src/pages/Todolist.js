@@ -1,27 +1,12 @@
 import React, { useRef, useState } from 'react';
 import { StyleSheet, View, Text, Button } from 'react-native';
 
-import Topbar from '../components/Topbar';
 import List from '../components/List';
 import DateView from '../components/DateView';
 
+import { TODAY, getDateArray } from '../utils/date';
+
 function Todolist() {
-  const ONE_DAY_TIME = 86400000;
-  const TODAY = new Date().getDay();
-
-  const getSundayTime = () => {
-    return new Date().getTime() - ONE_DAY_TIME * (TODAY - 1);
-  };
-
-  const getDateArray = () => {
-    const res = [];
-
-    for (let i = 0; i < 7; i++) {
-      res.push(new Date(getSundayTime() + ONE_DAY_TIME * i));
-    }
-
-    return res;
-  };
   const dateList = getDateArray();
   const [selectedDate, setSelectedDate] = useState(new Date());
 
