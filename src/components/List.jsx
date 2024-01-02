@@ -39,6 +39,7 @@ const useAddInput = (setTodos, selectedDate) => {
         {
           key,
           title: newTitle,
+          isChecked: false,
           last_update_date: selectedDate.toISOString(),
         },
         ...prev,
@@ -115,21 +116,26 @@ const useEditInput = (todos, setTodos) => {
 };
 
 function List({ selectedDate }) {
-  const {
-    data: todos,
-    upateData: setTodos,
-    isLoading,
-  } = useFetch(
-    'https://script.google.com/macros/s/AKfycbzW71WRMDG0hf1nB-vzoyCz7-kKdPZH-43zLTcZLVGg8kvZwfyj-YFQK4jRWUrq_--ZZg/exec',
-    []
-  );
+  const { data: todos, upateData: setTodos, isLoading } = useFetch([]);
+
   const filterTodos = useMemo(
     () =>
-      todos.filter(
-        (todo) =>
-          new Date(todo.last_update_date).toISOString().split('T')[0] ===
-          selectedDate.toISOString().split('T')[0]
-      ),
+      todos
+        .filter(
+          (todo) =>
+            todo.isRoutine ||
+            new Date(todo.last_update_date).toISOString().split('T')[0] ===
+              selectedDate.toISOString().split('T')[0]
+        )
+        .sort((a, b) => {
+          if (a.isRoutine && !b.isRoutine) {
+            return -1; // a comes before b
+          } else if (!a.isRoutine && b.isRoutine) {
+            return 1; // b comes before a
+          } else {
+            return 0; // no change in order
+          }
+        }),
     [todos, isLoading, selectedDate]
   );
 
@@ -217,10 +223,11 @@ function List({ selectedDate }) {
                   onDelete={handleDelete}
                   onEdit={handleEdit}
                   rowMap={rowMap}
+                  setTodos={setTodos}
                 />
               )}
               rightOpenValue={-150}
-              disableRightSwipe
+              leftOpenValue={75}
               disableLeftSwipe={isEditMode || isAddingMode}
               rightActivationValue={-300}
               rightActionValue={-375}

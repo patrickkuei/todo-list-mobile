@@ -1,11 +1,12 @@
 import axios from 'axios';
+import { BASE_URL } from './constant';
 
-export default async function ({ key, isChecked, title }) {
+export default async function ({ key, isChecked, title, isRoutine = false }) {
   const controller = new AbortController();
 
   try {
     await axios.post(
-      `https://script.google.com/macros/s/AKfycbxfZ8Og0D1vkMu2oViZ8pA0YW1QnVoXVsWZs86c-hmTJfBTrvGBMoMUjxnvHl--dpJcQA/exec?title=${title}&key=${key}&isChecked=${isChecked}`,
+      `${BASE_URL}?action=update&title=${title}&key=${key}&isChecked=${isChecked}&isRoutine=${isRoutine}`,
       {
         signal: controller.signal,
       }

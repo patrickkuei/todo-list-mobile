@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
-function useFetch(url, dependencies) {
+import { BASE_URL } from '../apis/constant';
+
+function useFetch(dependencies) {
   const [response, setResponse] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const controller = new AbortController();
@@ -11,7 +13,7 @@ function useFetch(url, dependencies) {
       setIsLoading(true);
 
       try {
-        const { data } = await axios.get(url, {
+        const { data } = await axios.get(BASE_URL, {
           signal: controller.signal,
         });
         setResponse(data);

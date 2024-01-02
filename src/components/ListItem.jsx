@@ -2,12 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 
+import Bookmark from '../image/bookmark-svgrepo-com';
+
 import updateTodo from '../apis/updateTodo';
 import debounce from '../utils/debounce';
 
 const ListItem = React.memo((props) => {
   const { item, onChecked, rowMap } = props;
-  const { title, key, isChecked: remoteIsChecked } = item;
+  const { title, key, isChecked: remoteIsChecked, isRoutine } = item;
   const [isChecked, setIsChecked] = useState(remoteIsChecked);
 
   const debouncedAPICall = debounce(
@@ -29,9 +31,8 @@ const ListItem = React.memo((props) => {
 
   return (
     <BouncyCheckbox
-      text={title}
+      textComponent={<Title text={title} isChecked={isChecked} isRoutine={isRoutine} />}
       style={styles.item}
-      textStyle={[isChecked ? styles.textColorChecked : styles.textColor]}
       onPress={handlePress}
       fillColor="#8390FF"
       unfillColor="white"
@@ -40,7 +41,26 @@ const ListItem = React.memo((props) => {
   );
 });
 
+const Title = ({ text, isChecked, isRoutine }) => {
+  return (
+    <View style={styles.container}>
+      {isRoutine && (
+        <View style={styles.iconContainer}>
+          <Bookmark width={30} height={30} color="#330099" />
+        </View>
+      )}
+      <Text style={[isChecked ? styles.textColorChecked : styles.customTitle]}>{text}</Text>
+    </View>
+  );
+};
+
 const styles = StyleSheet.create({
+  container: {
+    marginLeft: 16,
+    flexDirection: 'row',
+    gap: 4,
+    alignItems: 'center',
+  },
   item: {
     backgroundColor: '#D7EBF9',
     borderRadius: 4,
@@ -52,6 +72,15 @@ const styles = StyleSheet.create({
   },
   textColorChecked: {
     color: '#D9D9D9',
+  },
+  customTitle: {
+    color: '#292929',
+    fontSize: 16,
+  },
+  iconContainer: {
+    position: 'absolute',
+    top: -35,
+    left: -30,
   },
 });
 
