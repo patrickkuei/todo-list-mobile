@@ -15,9 +15,9 @@ function DateView({ dateList, onIndexChanged, today }) {
       index={today}
       onIndexChanged={onIndexChanged}
     >
-      {dateList.map((d, i) => (
+      {dateList.map((d) => (
         <View key={d} style={styles.dataSelector}>
-          <Text style={styles.day}>{DayNames[i]}</Text>
+          <Text style={styles.day}>{DayNames[d.getDay()]}</Text>
           <Text style={styles.date}>{d.toISOString().split('T')[0].replaceAll('-', '/')}</Text>
         </View>
       ))}
