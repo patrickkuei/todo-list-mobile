@@ -1,14 +1,45 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import CalendarDay from './CalendarDay';
 
+import useFetch from '../hooks/useFetch';
+
 import { DAYS_ARRAY, getMonthDayArray } from '../utils/date';
+
+const getTodoCountsByDate = (filteredTodos) => {
+  const todoCountsByDate = {};
+
+  filteredTodos.forEach((todo) => {
+    const date = new Date(todo.last_update_date).getDate();
+
+    if (todoCountsByDate[date]) {
+      if (todo.isChecked) {
+        todoCountsByDate[date].done++;
+      } else {
+        todoCountsByDate[date].todos++;
+      }
+    } else {
+      if (todo.isChecked) {
+        todoCountsByDate[date] = {
+          todos: 0,
+          done: 1,
+        };
+      } else {
+        todoCountsByDate[date] = {
+          todos: 1,
+          done: 0,
+        };
+      }
+    }
+  });
+
+  return todoCountsByDate;
+};
 
 const SimpleCalendar = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth() + 1;
-  const monthDayArray = getMonthDayArray(year, month);
 
   const getTitle = () => {
     const currentDate = new Date();
@@ -17,6 +48,20 @@ const SimpleCalendar = () => {
 
     return `${currentMonth} ${year}`;
   };
+
+  const { data: todos, isLoading } = useFetch([]);
+  const sortedTodos = todos.sort((a, b) => {
+    return new Date(a.last_update_date) - new Date(b.last_update_date);
+  });
+  const filteredTodos = sortedTodos.filter((todo) => {
+    return (
+      new Date(todo.last_update_date).getFullYear() === currentDate.getFullYear() &&
+      new Date(todo.last_update_date).getMonth() === currentDate.getMonth()
+    );
+  });
+
+  const todoCountsByDate = getTodoCountsByDate(filteredTodos);
+  const monthDayArray = getMonthDayArray(year, month, todoCountsByDate);
 
   return (
     <View style={styles.container}>
@@ -30,11 +75,17 @@ const SimpleCalendar = () => {
       <View style={styles.dateContainer}>
         <Text style={styles.date}>{getTitle()}</Text>
       </View>
-      <View style={styles.calendarContainer}>
-        {monthDayArray.map(({ day, month }, i) => (
-          <CalendarDay key={i} day={day} month={month} index={i} />
-        ))}
-      </View>
+      {isLoading ? (
+        <ActivityIndicator style={styles.loading} size="large" />
+      ) : (
+        <View style={styles.calendarContainer}>
+          {monthDayArray.map(({ day, month, todo, done }, i) => {
+            return (
+              <CalendarDay key={i} day={day} month={month} index={i} todo={todo} done={done} />
+            );
+          })}
+        </View>
+      )}
     </View>
   );
 };
@@ -90,6 +141,9 @@ const styles = StyleSheet.create({
   },
   disableDayText: {
     color: '#ccc8c8',
+  },
+  loading: {
+    marginTop: '50%',
   },
   selectedDay: {
     backgroundColor: 'lightblue',
