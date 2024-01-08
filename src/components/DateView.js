@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import Swiper from 'react-native-swiper';
 
@@ -26,9 +26,6 @@ function DateView({ dateList, onIndexChanged, today }) {
 }
 
 const styles = StyleSheet.create({
-  swiperContainer: {
-    flex: 0,
-  },
   date: {
     color: '#A2B7CE',
     fontSize: 16,
@@ -36,6 +33,9 @@ const styles = StyleSheet.create({
   day: {
     color: '#165698',
     fontSize: 26,
+  },
+  swiperContainer: {
+    flex: 0,
   },
 });
 

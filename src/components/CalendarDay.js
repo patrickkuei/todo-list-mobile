@@ -16,7 +16,6 @@ function CalendarDay({ day, month, index }) {
     const isFirstColumn = index % NUMBER_OF_DAYS_IN_ROW === 0;
 
     const border = {
-      borderColor: 'black',
       borderBottomWidth: 1,
       borderRightWidth: 1,
       borderTopWidth: 0,
@@ -61,25 +60,25 @@ function CalendarDay({ day, month, index }) {
 
 const styles = StyleSheet.create({
   dayContainer: {
-    width: 50,
-    height: 80,
     alignItems: 'center',
-  },
-  selectedDay: {
-    backgroundColor: 'lightblue',
-  },
-  todayText: {
-    fontWeight: 'bold',
+    height: 80,
+    width: 50,
   },
   dayText: {
-    fontSize: 18,
     color: '#434242',
+    fontSize: 18,
   },
   disableDay: {
     backgroundColor: '#e8e6e6',
   },
   disableDayText: {
     color: '#ccc8c8',
+  },
+  selectedDay: {
+    backgroundColor: 'lightblue',
+  },
+  todayText: {
+    fontWeight: 'bold',
   },
 });
 

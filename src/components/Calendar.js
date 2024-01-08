@@ -1,5 +1,5 @@
-import React, { useMemo, useState } from 'react';
-import { View, Text, Pressable, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet } from 'react-native';
 import CalendarDay from './CalendarDay';
 
 import { DAYS_ARRAY, getMonthDayArray } from '../utils/date';
@@ -40,62 +40,62 @@ const SimpleCalendar = () => {
 };
 
 const styles = StyleSheet.create({
+  calendarContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'flex-start',
+    marginHorizontal: -8,
+  },
+  constantDay: {
+    alignItems: 'center',
+    flex: 1,
+    paddingVertical: 8,
+  },
+  constantDayContainer: {
+    borderBottomWidth: 1,
+    borderColor: 'rgba(165, 165, 165, 0.43)',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginHorizontal: -8,
+    marginTop: -38,
+  },
+  constantDayText: {
+    color: '#727272',
+  },
   container: {
     flex: 1,
     paddingHorizontal: 20,
     paddingTop: 50,
   },
-  constantDayContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    borderBottomWidth: 1,
-    borderColor: 'rgba(165, 165, 165, 0.43)',
-    marginTop: -38,
-    marginHorizontal: -8,
-  },
-  constantDay: {
-    flex: 1,
-    alignItems: 'center',
-    paddingVertical: 8,
-  },
-  constantDayText: {
-    color: '#727272',
+  date: {
+    color: '#434242',
+    fontSize: 24,
   },
   dateContainer: {
     height: 90,
     justifyContent: 'center',
     paddingLeft: 8,
   },
-  date: {
-    fontSize: 24,
-    color: '#434242',
-  },
-  calendarContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    marginHorizontal: -8,
-    justifyContent: 'flex-start',
-  },
   dayContainer: {
-    width: 50,
-    height: 80,
     alignItems: 'center',
-  },
-  selectedDay: {
-    backgroundColor: 'lightblue',
-  },
-  todayText: {
-    fontWeight: 'bold',
+    height: 80,
+    width: 50,
   },
   dayText: {
-    fontSize: 18,
     color: '#434242',
+    fontSize: 18,
   },
   disableDay: {
     backgroundColor: '#e8e6e6',
   },
   disableDayText: {
     color: '#ccc8c8',
+  },
+  selectedDay: {
+    backgroundColor: 'lightblue',
+  },
+  todayText: {
+    fontWeight: 'bold',
   },
 });
 

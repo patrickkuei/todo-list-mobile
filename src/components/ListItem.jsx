@@ -49,23 +49,32 @@ const Title = ({ text, isChecked, isRoutine }) => {
           <Bookmark width={30} height={30} color="#330099" />
         </View>
       )}
-      <Text style={[isChecked ? styles.textColorChecked : styles.customTitle]}>{text}</Text>
+      <Text style={isChecked ? styles.textColorChecked : styles.customTitle}>{text}</Text>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    marginLeft: 16,
+    alignItems: 'center',
     flexDirection: 'row',
     gap: 4,
-    alignItems: 'center',
+    marginLeft: 16,
+  },
+  customTitle: {
+    color: '#292929',
+    fontSize: 16,
+  },
+  iconContainer: {
+    left: -30,
+    position: 'absolute',
+    top: -35,
   },
   item: {
     backgroundColor: '#D7EBF9',
     borderRadius: 4,
-    padding: 20,
     height: 81,
+    padding: 20,
   },
   textColor: {
     color: '#292929',
@@ -73,15 +82,8 @@ const styles = StyleSheet.create({
   textColorChecked: {
     color: '#D9D9D9',
   },
-  customTitle: {
-    color: '#292929',
-    fontSize: 16,
-  },
-  iconContainer: {
-    position: 'absolute',
-    top: -35,
-    left: -30,
-  },
 });
+
+ListItem.displayName = 'ListItem';
 
 export default ListItem;

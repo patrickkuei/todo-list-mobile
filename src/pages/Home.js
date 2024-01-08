@@ -20,7 +20,7 @@ function Home({ navigation }) {
         onPress={() => handleNavigate('Todolist')}
       >
         {({ pressed }) => (
-          <Text style={[pressed ? styles.buttonTextPressed : styles.buttonText]}>Todo List</Text>
+          <Text style={pressed ? styles.buttonTextPressed : styles.buttonText}>Todo List</Text>
         )}
       </Pressable>
       <Pressable
@@ -33,7 +33,7 @@ function Home({ navigation }) {
         onPress={() => handleNavigate('Calendar')}
       >
         {({ pressed }) => (
-          <Text style={[pressed ? styles.buttonTextPressed : styles.buttonText]}>Calendar</Text>
+          <Text style={pressed ? styles.buttonTextPressed : styles.buttonText}>Calendar</Text>
         )}
       </Pressable>
       <Pressable
@@ -45,7 +45,7 @@ function Home({ navigation }) {
         ]}
       >
         {({ pressed }) => (
-          <Text style={[pressed ? styles.buttonTextPressed : styles.buttonText]}>Coming soon</Text>
+          <Text style={pressed ? styles.buttonTextPressed : styles.buttonText}>Coming soon</Text>
         )}
       </Pressable>
     </View>
@@ -53,24 +53,31 @@ function Home({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 36,
-  },
   button: {
+    alignItems: 'center',
     backgroundColor: '#D7EBF9',
     borderRadius: 4,
-    padding: 20,
     height: 81,
-    width: 300,
-    alignItems: 'center',
     justifyContent: 'center',
+    padding: 20,
+    width: 300,
+  },
+  buttonPressed: {
+    backgroundColor: '#dfedf7',
   },
   buttonText: {
     color: '#165698',
     fontSize: 20,
+  },
+  buttonTextPressed: {
+    color: '#2b75c2',
+    fontSize: 20,
+  },
+  container: {
+    alignItems: 'center',
+    flex: 1,
+    gap: 36,
+    justifyContent: 'center',
   },
   shadowProp: {
     shadowColor: '#969696',
@@ -78,18 +85,11 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.8,
     shadowRadius: 3,
   },
-  buttonPressed: {
-    backgroundColor: '#dfedf7',
-  },
   shadowPropPressed: {
     shadowColor: '#969696',
     shadowOffset: { width: 3, height: 5 },
     shadowOpacity: 0.6,
     shadowRadius: 3,
-  },
-  buttonTextPressed: {
-    color: '#2b75c2',
-    fontSize: 20,
   },
 });
 

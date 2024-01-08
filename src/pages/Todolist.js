@@ -1,5 +1,5 @@
-import React, { useRef, useState } from 'react';
-import { StyleSheet, View, Text, Button } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, View } from 'react-native';
 
 import List from '../components/List';
 import DateView from '../components/DateView';
@@ -25,9 +25,6 @@ function Todolist() {
 }
 
 const styles = StyleSheet.create({
-  swiperContainer: {
-    flex: 0,
-  },
   date: {
     color: '#A2B7CE',
     fontSize: 16,
@@ -45,6 +42,9 @@ const styles = StyleSheet.create({
   },
   outterContainer: {
     flex: 1,
+  },
+  swiperContainer: {
+    flex: 0,
   },
 });
 

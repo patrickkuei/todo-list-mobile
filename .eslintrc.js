@@ -1,30 +1,30 @@
 module.exports = {
-  parser: "@babel/eslint-parser",
+  parser: '@babel/eslint-parser',
   plugins: ['react', 'react-native'],
   env: {
-      'react-native/react-native': true,
+    'react-native/react-native': true,
+    browser: true,
   },
   parserOptions: {
-    "sourceType": "module",
+    sourceType: 'module',
     ecmaFeatures: {
-      jsx: true
+      jsx: true,
     },
-    "requireConfigFile": false,
+    requireConfigFile: false,
   },
   extends: [
-    'eslint:recommended', 
-    'plugin:react/recommended', 
+    'eslint:recommended',
+    'plugin:react/recommended',
     'plugin:react-native/all',
-    "prettier",
-    "prettier/react"
+    'prettier',
   ],
   rules: {
-    "react-native/no-unused-styles": 2,
-    "react-native/split-platform-components": 2,
-    "react-native/no-inline-styles": 2,
-    "react-native/no-color-literals": 0,
-    "react-native/no-raw-text": 2,
-    "react-native/no-single-element-style-arrays": 2,
+    'react-native/no-unused-styles': 0,
+    'react-native/split-platform-components': 2,
+    'react-native/no-inline-styles': 2,
+    'react-native/no-color-literals': 0,
+    'react-native/no-raw-text': 2,
+    'react-native/no-single-element-style-arrays': 2,
     'react/prop-types': 0,
-  }
+  },
 };

@@ -46,7 +46,7 @@ function ListHiddenItem({ data, onDelete, onEdit, rowMap, setTodos }) {
 
   return (
     <View style={styles.rowBack}>
-      <View style={[styles.backRightBtn]}>
+      <View style={styles.backRightBtn}>
         <Pressable onPress={handleBookmark}>
           <Bookmark width={30} height={30} color="#000" isStroke={true} />
         </Pressable>
@@ -66,16 +66,6 @@ function ListHiddenItem({ data, onDelete, onEdit, rowMap, setTodos }) {
 }
 
 const styles = StyleSheet.create({
-  rowBack: {
-    alignItems: 'center',
-    backgroundColor: '#DDD',
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingLeft: 15,
-    borderRadius: 4,
-    backgroundColor: '#F3FAFF',
-  },
   backRightBtn: {
     alignItems: 'center',
     bottom: 0,
@@ -89,6 +79,15 @@ const styles = StyleSheet.create({
   },
   backRightBtnRight: {
     right: 0,
+  },
+  rowBack: {
+    alignItems: 'center',
+    backgroundColor: '#F3FAFF',
+    borderRadius: 4,
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingLeft: 15,
   },
 });
 

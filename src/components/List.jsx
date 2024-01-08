@@ -256,67 +256,6 @@ function List({ selectedDate }) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    position: 'relative',
-  },
-  center: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  input: {
-    height: 67,
-    borderWidth: 1,
-    borderRadius: 4,
-    borderColor: '#292929',
-    padding: 10,
-    marginTop: 20,
-    zIndex: 999,
-    backgroundColor: '#FFF',
-    fontSize: 16,
-    color: '#292929',
-  },
-  list: {
-    marginTop: 12,
-  },
-  button: {
-    backgroundColor: '#7572FF',
-    borderRadius: 999,
-    width: 80,
-    height: 80,
-    position: 'absolute',
-    bottom: 0,
-    right: 0,
-    alignItems: 'center',
-  },
-  buttonText: {
-    fontSize: 80,
-    color: 'white',
-    marginTop: -31,
-  },
-  shadowProp: {
-    shadowColor: '#969696',
-    shadowOffset: { width: 4, height: 8 },
-    shadowOpacity: 0.8,
-    shadowRadius: 3,
-  },
-  buttonPressed: {
-    backgroundColor: '#a4a2fc',
-  },
-  shadowPropPressed: {
-    shadowColor: '#969696',
-    shadowOffset: { width: 8, height: 12 },
-    shadowOpacity: 0.6,
-    shadowRadius: 3,
-  },
-  rowBack: {
-    alignItems: 'center',
-    backgroundColor: '#DDD',
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingLeft: 15,
-  },
   backRightBtn: {
     alignItems: 'center',
     bottom: 0,
@@ -333,10 +272,71 @@ const styles = StyleSheet.create({
     backgroundColor: 'red',
     right: 0,
   },
-  noTodo: {
-    flex: 1,
+  button: {
     alignItems: 'center',
+    backgroundColor: '#7572FF',
+    borderRadius: 999,
+    bottom: 0,
+    height: 80,
+    position: 'absolute',
+    right: 0,
+    width: 80,
+  },
+  buttonPressed: {
+    backgroundColor: '#a4a2fc',
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 80,
+    marginTop: -31,
+  },
+  center: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  container: {
+    flex: 1,
+    position: 'relative',
+  },
+  input: {
+    backgroundColor: '#FFF',
+    borderColor: '#292929',
+    borderRadius: 4,
+    borderWidth: 1,
+    color: '#292929',
+    fontSize: 16,
+    height: 67,
+    marginTop: 20,
+    padding: 10,
+    zIndex: 999,
+  },
+  list: {
+    marginTop: 12,
+  },
+  noTodo: {
+    alignItems: 'center',
+    flex: 1,
     margin: 72,
+  },
+  rowBack: {
+    alignItems: 'center',
+    backgroundColor: '#DDD',
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingLeft: 15,
+  },
+  shadowProp: {
+    shadowColor: '#969696',
+    shadowOffset: { width: 4, height: 8 },
+    shadowOpacity: 0.8,
+    shadowRadius: 3,
+  },
+  shadowPropPressed: {
+    shadowColor: '#969696',
+    shadowOffset: { width: 8, height: 12 },
+    shadowOpacity: 0.6,
+    shadowRadius: 3,
   },
 });
 
