@@ -4,7 +4,7 @@ import { StyleSheet, View, Text, Button } from 'react-native';
 import SimpleCalendar from '../components/Calendar';
 
 function Calendar({ navigation }) {
-  return <SimpleCalendar />;
+  return <SimpleCalendar navigation={navigation} />;
 }
 
 export default Calendar;

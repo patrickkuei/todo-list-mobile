@@ -1,66 +1,89 @@
 import React, { useMemo, useState } from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
+import * as Haptics from 'expo-haptics';
 
-function CalendarDay({ day, month, index }) {
-  const [selectedDate, setSelectedDate] = useState(null);
+const getBorderStyle = (index) => {
+  const NUMBER_OF_DAYS_IN_ROW = 7;
+  const currentRow = Math.floor(index / NUMBER_OF_DAYS_IN_ROW);
+  const isFirstRow = currentRow === 0;
+  const isFirstColumn = index % NUMBER_OF_DAYS_IN_ROW === 0;
 
-  const handleDatePress = (date) => {
-    // setSelectedDate(date);
-    // You can perform actions based on the selected date here (e.g., fetch todos for the selected date)
+  const border = {
+    borderBottomWidth: 1,
+    borderRightWidth: 1,
+    borderTopWidth: 0,
+    borderLeftWidth: 0,
+    borderColor: 'rgba(165, 165, 165, 0.43)',
   };
 
-  const getBorderStyle = (index) => {
-    const NUMBER_OF_DAYS_IN_ROW = 7;
-    const currentRow = Math.floor(index / NUMBER_OF_DAYS_IN_ROW);
-    const isFirstRow = currentRow === 0;
-    const isFirstColumn = index % NUMBER_OF_DAYS_IN_ROW === 0;
+  if (isFirstRow) {
+    border.borderTopWidth = 1;
+  }
+  if (isFirstColumn) {
+    border.borderLeftWidth = 1;
+  }
 
-    const border = {
-      borderBottomWidth: 1,
-      borderRightWidth: 1,
-      borderTopWidth: 0,
-      borderLeftWidth: 0,
-      borderColor: 'rgba(165, 165, 165, 0.43)',
-    };
+  return border;
+};
 
-    if (isFirstRow) {
-      border.borderTopWidth = 1;
-    }
-    if (isFirstColumn && index !== 42) {
-      border.borderLeftWidth = 1;
-    }
+function CalendarDay({ year, day, month, index, todo, done, navigation }) {
+  const isToday = new Date().getDate() === day && new Date().getMonth() + 1 === month;
 
-    return border;
+  const handleDatePress = () => {
+    navigation.navigate('Todolist', { date: Date.UTC(year, month - 1, day) });
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
   };
 
   return (
     <Pressable
-      style={[
+      style={({ pressed }) => [
         styles.dayContainer,
-        selectedDate === day && styles.selectedDay,
         getBorderStyle(index),
         new Date().getMonth() + 1 !== month && styles.disableDay,
+        pressed && styles.shadowPropPressed,
       ]}
       onPress={() => handleDatePress(day)}
     >
       <View style={styles.dayCell}>
-        <Text
-          style={[
-            new Date().getDate() === day && new Date().getMonth() + 1 === month && styles.todayText,
-            styles.dayText,
-            new Date().getMonth() + 1 !== month && styles.disableDayText,
-          ]}
-        >
-          {day}
-        </Text>
+        <View style={styles.dayTextContainer}>
+          <View style={isToday && styles.todayBackground}>
+            <Text
+              style={[
+                styles.dayText,
+                isToday && styles.todayText,
+                new Date().getMonth() + 1 !== month && styles.disableDayText,
+              ]}
+            >
+              {day}
+            </Text>
+          </View>
+        </View>
+        {new Date().getMonth() + 1 === month && (
+          <View>
+            <Text style={[styles.dayCellText, styles.todoColor, !todo && styles.disableDayText]}>
+              todo: {todo}
+            </Text>
+            <Text style={[styles.dayCellText, styles.doneColor, !done && styles.disableDayText]}>
+              done: {done}
+            </Text>
+          </View>
+        )}
       </View>
     </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
+  dayCell: {
+    gap: 5,
+  },
+  dayCellText: {
+    fontFamily: 'Menlo',
+    fontSize: 9,
+  },
   dayContainer: {
     alignItems: 'center',
+    backgroundColor: '#f2f2f2',
     height: 80,
     width: 50,
   },
@@ -68,17 +91,35 @@ const styles = StyleSheet.create({
     color: '#434242',
     fontSize: 18,
   },
+  dayTextContainer: {
+    alignItems: 'center',
+  },
   disableDay: {
     backgroundColor: '#e8e6e6',
   },
   disableDayText: {
     color: '#ccc8c8',
   },
-  selectedDay: {
-    backgroundColor: 'lightblue',
+  doneColor: {
+    color: '#2E496D',
+  },
+  shadowPropPressed: {
+    shadowColor: '#969696',
+    shadowOffset: { width: 2, height: 2 },
+    shadowOpacity: 1,
+    shadowRadius: 3,
+  },
+  todayBackground: {
+    alignItems: 'center',
+    backgroundColor: '#436E9E',
+    borderRadius: 50,
+    width: 25,
   },
   todayText: {
-    fontWeight: 'bold',
+    color: 'white',
+  },
+  todoColor: {
+    color: '#628FB5',
   },
 });
 

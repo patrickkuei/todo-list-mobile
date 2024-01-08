@@ -36,7 +36,7 @@ const getTodoCountsByDate = (filteredTodos) => {
   return todoCountsByDate;
 };
 
-const SimpleCalendar = () => {
+const SimpleCalendar = ({ navigation }) => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth() + 1;
@@ -79,9 +79,18 @@ const SimpleCalendar = () => {
         <ActivityIndicator style={styles.loading} size="large" />
       ) : (
         <View style={styles.calendarContainer}>
-          {monthDayArray.map(({ day, month, todo, done }, i) => {
+          {monthDayArray.map(({ day, month, todo, done, year }, i) => {
             return (
-              <CalendarDay key={i} day={day} month={month} index={i} todo={todo} done={done} />
+              <CalendarDay
+                key={i}
+                year={year}
+                day={day}
+                month={month}
+                index={i}
+                todo={todo}
+                done={done}
+                navigation={navigation}
+              />
             );
           })}
         </View>

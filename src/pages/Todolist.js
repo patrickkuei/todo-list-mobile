@@ -4,20 +4,24 @@ import { StyleSheet, View } from 'react-native';
 import List from '../components/List';
 import DateView from '../components/DateView';
 
-import { TODAY, getDateArray } from '../utils/date';
+import { getDateArray } from '../utils/date';
 
-function Todolist() {
-  const dateList = getDateArray();
-  const [selectedDate, setSelectedDate] = useState(new Date());
+function Todolist({ route }) {
+  const { date } = route.params || {};
+
+  const [selectedDate, setSelectedDate] = useState(date ? new Date(date) : new Date());
 
   const onIndexChanged = (index) => {
     setSelectedDate(dateList[index]);
   };
 
+  const today = date ? new Date(date) : new Date();
+  const dateList = getDateArray(today);
+
   return (
     <View style={styles.outterContainer}>
       <View style={styles.innterContainer}>
-        <DateView dateList={dateList} onIndexChanged={onIndexChanged} today={TODAY} />
+        <DateView dateList={dateList} onIndexChanged={onIndexChanged} today={today.getDay()} />
         <List selectedDate={selectedDate} />
       </View>
     </View>
