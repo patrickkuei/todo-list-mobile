@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
   calendarContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'flex-start',
+    justifyContent: 'center',
     marginHorizontal: -8,
   },
   constantDay: {
@@ -153,9 +153,6 @@ const styles = StyleSheet.create({
   },
   loading: {
     marginTop: '50%',
-  },
-  selectedDay: {
-    backgroundColor: 'lightblue',
   },
   todayText: {
     fontWeight: 'bold',
