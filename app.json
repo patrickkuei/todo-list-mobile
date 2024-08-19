@@ -14,6 +14,9 @@
       "url": "https://u.expo.dev/9d42ed25-dc34-4c5f-b3ec-e6dc3dfc7988"
     },
     "android": {},
-    "ios": {}
+    "ios": {},
+    "web": {
+      "bundler": "metro"
+    }
   }
 }
