@@ -49,12 +49,14 @@ export const getMonthDayArray = (year, month, todoCount) => {
   }
 
   for (let i = 0; i < totalDaysInMonth; i++) {
+    const date = new Date(year, month - 1, i + 2).toISOString().split('T')[0];
+
     daysArray[firstDate + i] = {
       day: i + 1,
       month,
       year,
-      todo: todoCount[i + 1]?.todos || 0,
-      done: todoCount[i + 1]?.done || 0,
+      todo: todoCount[date]?.todos || 0,
+      done: todoCount[date]?.done || 0,
     };
   }
 

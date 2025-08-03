@@ -27,9 +27,16 @@ const getBorderStyle = (index) => {
 };
 
 function CalendarDay({ year, day, month, index, todo, done, navigation }) {
-  const isToday = new Date().getDate() === day && new Date().getMonth() + 1 === month;
-
+  const isCurrentMonth = new Date().getMonth() + 1 === month;
+  const isCurrentYear = new Date().getFullYear() === year;
+  const isToday =
+    new Date().getDate() === day &&
+    isCurrentMonth &&
+    isCurrentYear;
+  
   const handleDatePress = () => {
+    if (!isCurrentMonth || !isCurrentYear) return;
+
     navigation.navigate('Todolist', { date: Date.UTC(year, month - 1, day) });
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
   };
@@ -39,10 +46,10 @@ function CalendarDay({ year, day, month, index, todo, done, navigation }) {
       style={({ pressed }) => [
         styles.dayContainer,
         getBorderStyle(index),
-        new Date().getMonth() + 1 !== month && styles.disableDay,
+        (!isCurrentMonth || !isCurrentYear) && styles.disableDay,
         pressed && styles.shadowPropPressed,
       ]}
-      onPress={() => handleDatePress(day)}
+      onPress={() => handleDatePress()}
     >
       <View style={styles.dayCell}>
         <View style={styles.dayTextContainer}>
@@ -51,23 +58,21 @@ function CalendarDay({ year, day, month, index, todo, done, navigation }) {
               style={[
                 styles.dayText,
                 isToday && styles.todayText,
-                new Date().getMonth() + 1 !== month && styles.disableDayText,
+                (!isCurrentMonth || !isCurrentYear) && styles.disableDayText,
               ]}
             >
               {day}
             </Text>
           </View>
         </View>
-        {new Date().getMonth() + 1 === month && (
-          <View>
-            <Text style={[styles.dayCellText, styles.todoColor, !todo && styles.disableDayText]}>
-              todo: {todo}
-            </Text>
-            <Text style={[styles.dayCellText, styles.doneColor, !done && styles.disableDayText]}>
-              done: {done}
-            </Text>
-          </View>
-        )}
+        <View>
+          <Text style={[styles.dayCellText, styles.todoColor, (!todo || !isCurrentMonth || !isCurrentYear) && styles.disableDayText]}>
+            todo: {todo ?? 0}
+          </Text>
+          <Text style={[styles.dayCellText, styles.doneColor, (!done || !isCurrentMonth || !isCurrentYear) && styles.disableDayText]}>
+            done: {done ?? 0}
+          </Text>
+        </View>
       </View>
     </Pressable>
   );
