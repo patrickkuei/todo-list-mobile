@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
+import { ActivityIndicator, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import CalendarDay from './CalendarDay';
 
 import useFetch from '../hooks/useFetch';
 
 import { DAYS_ARRAY, getMonthDayArray } from '../utils/date';
 
-const getTodoCountsByDate = (filteredTodos) => {
+const getTodoCountsByDate = (todos) => {
   const todoCountsByDate = {};
 
-  filteredTodos.forEach((todo) => {
-    const date = new Date(todo.last_update_date).getDate();
+  todos.forEach((todo) => {
+    const date = new Date(todo.last_update_date).toISOString().split('T')[0];
 
     if (todoCountsByDate[date]) {
       if (todo.isChecked) {
@@ -32,7 +32,7 @@ const getTodoCountsByDate = (filteredTodos) => {
       }
     }
   });
-
+  
   return todoCountsByDate;
 };
 
@@ -42,38 +42,47 @@ const SimpleCalendar = ({ navigation }) => {
   const month = currentDate.getMonth() + 1;
 
   const getTitle = () => {
-    const currentDate = new Date();
     const currentMonth = currentDate.toLocaleString('default', { month: 'short' });
-    const year = currentDate.getFullYear();
 
     return `${currentMonth} ${year}`;
   };
 
-  const { data: todos, isLoading } = useFetch([]);
-  const sortedTodos = todos.sort((a, b) => {
-    return new Date(a.last_update_date) - new Date(b.last_update_date);
-  });
-  const filteredTodos = sortedTodos.filter((todo) => {
-    return (
-      new Date(todo.last_update_date).getFullYear() === currentDate.getFullYear() &&
-      new Date(todo.last_update_date).getMonth() === currentDate.getMonth()
-    );
-  });
+  const handlePrevMonth = () => {
+    setCurrentDate(new Date(currentDate.setMonth(currentDate.getMonth() - 1)));
+  };
 
-  const todoCountsByDate = getTodoCountsByDate(filteredTodos);
+  const handleNextMonth = () => {
+    setCurrentDate(new Date(currentDate.setMonth(currentDate.getMonth() + 1)));
+  };
+
+  const handleTodayPress = () => {
+    setCurrentDate(new Date());
+  };
+
+  const { data: todos, isLoading } = useFetch([]);
+  const todoCountsByDate = getTodoCountsByDate(todos);
   const monthDayArray = getMonthDayArray(year, month, todoCountsByDate);
 
   return (
     <View style={styles.container}>
+      <View style={styles.dateContainer}>
+        <TouchableOpacity onPress={handlePrevMonth} style={styles.monthButton}>
+          <Text style={styles.monthButtonText}>{'<'}</Text>
+        </TouchableOpacity>
+        <Text style={styles.date}>{getTitle()}</Text>
+        <TouchableOpacity onPress={handleNextMonth} style={styles.monthButton}>
+          <Text style={styles.monthButtonText}>{'>'}</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={handleTodayPress} style={styles.todayButton}>
+          <Text style={styles.todayButtonText}>Today</Text>
+        </TouchableOpacity>
+      </View>
       <View style={styles.constantDayContainer}>
         {DAYS_ARRAY.map((DAY, i) => (
           <View key={i} style={styles.constantDay}>
             <Text style={styles.constantDayText}>{DAY}</Text>
           </View>
         ))}
-      </View>
-      <View style={styles.dateContainer}>
-        <Text style={styles.date}>{getTitle()}</Text>
       </View>
       {isLoading ? (
         <ActivityIndicator style={styles.loading} size="large" />
@@ -117,7 +126,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     marginHorizontal: -8,
-    marginTop: -38,
   },
   constantDayText: {
     color: '#727272',
@@ -125,16 +133,18 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 20,
-    paddingTop: 50,
   },
   date: {
     color: '#434242',
+    flex: 1,
     fontSize: 24,
+    textAlign: 'center',
   },
   dateContainer: {
-    height: 90,
-    justifyContent: 'center',
-    paddingLeft: 8,
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 8,
   },
   dayContainer: {
     alignItems: 'center',
@@ -153,6 +163,20 @@ const styles = StyleSheet.create({
   },
   loading: {
     marginTop: '50%',
+  },
+  monthButton: {
+    padding: 10,
+  },
+  monthButtonText: {
+    color: '#434242',
+    fontSize: 24,
+  },
+  todayButton: {
+    padding: 10,
+  },
+  todayButtonText: {
+    color: '#434242',
+    fontSize: 18,
   },
   todayText: {
     fontWeight: 'bold',
